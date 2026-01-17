@@ -1,0 +1,76 @@
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#eef3fb;
+;}
+
+.header{
+  background:linear-gradient(90deg,#0052D4,#4364F7,#6FB1FC);
+  color:white;
+  padding:20px;
+  text-align:center;
+  font-size:22px;
+  font-weight:bold;
+}
+
+.card{
+  background:#fff;
+  margin:15px;
+  padding:15px;
+  border-radius:12px;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin-top:6px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+button{
+  padding:8px 12px;
+  border:none;
+  border-radius:6px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.save{background:#008f39;color:#fff}
+.edit{background:#ffc107}
+.delete{background:#d9534f;color:#fff}
+
+.driver-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#f4f7ff;
+  padding:8px;
+  border-radius:8px;
+  margin-top:8px;
+}
+
+.toast{
+  position:fixed;
+  bottom:80px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#333;
+  color:#fff;
+  padding:10px 20px;
+  border-radius:50px;
+  display:none;
+  z-index:9999;
+}
+.driver-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px;
+  border-bottom:1px solid #ddd;
+}
+
+.btn-group button{
+  margin-left:6px;
+}

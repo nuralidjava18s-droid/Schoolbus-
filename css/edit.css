@@ -1,0 +1,224 @@
+body{
+  font-family:Arial, sans-serif;
+  background:#f4f6fb;
+  margin:0;
+  padding:15px;
+  padding-bottom:90px; /* ruang navbar */
+}
+
+.card{
+  background:#fff;
+  padding:18px;
+  border-radius:10px;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+  margin-bottom:15px;
+}
+
+input,select{
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+
+button{
+  padding:10px;
+  border:none;
+  border-radius:6px;
+  font-weight:bold;
+  margin-right:6px;
+}
+
+.save{background:#008f39;color:#fff}
+.delete{background:#d9534f;color:#fff}
+.warning{background:#555;color:#fff}
+
+.student-card{
+  background:#eef3ff;
+  padding:10px;
+  border-radius:8px;
+  margin-top:6px;
+  cursor:pointer;
+}
+
+.popup{
+  position:fixed;
+  top:0;left:0;
+  width:100%;body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4f7fc;
+  padding:20px;
+  padding-bottom:90px;
+}
+
+h2{text-align:center}
+
+.card{
+  background:#fff;
+  padding:18px;
+  border-radius:10px;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+  margin-bottom:20px;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:10px;
+  margin-top:6px;
+  border:1px solid #ccc;
+  border-radius:6px;
+  box-sizing:border-box;
+}
+
+button{
+  padding:10px 15px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:bold;
+  margin-top:10px;
+}
+
+.save{background:#008f39;color:#fff}
+.backup{background:#0066cc;color:#fff}
+.full{width:100%}
+
+#previewTotal{
+  margin-top:12px;
+  padding:10px;
+  background:#eef7ff;
+  border-radius:8px;
+  font-weight:bold;
+  color:#0056b3;
+}
+
+.restore-label{
+  display:block;
+  margin-top:10px;
+  font-weight:bold;
+}
+  background:rgba(0,0,0,.4);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+
+.popupBox{
+  width:90%;
+  max-width:400px;
+}
+body{
+  font-family:Arial, sans-serif;
+  background:#f4f6fb;
+  margin:0;
+  padding:15px;
+  padding-bottom:90px; /* ruang navbar */
+}
+
+.card{
+  background:#fff;
+  padding:18px;
+  border-radius:10px;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+  margin-bottom:15px;
+}
+
+input,select{
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+
+button{
+  padding:10px;
+  border:none;
+  border-radius:6px;
+  font-weight:bold;
+  margin-right:6px;
+}
+
+.save{background:#008f39;color:#fff}
+.delete{background:#d9534f;color:#fff}
+.warning{background:#555;color:#fff}
+
+.student-card{
+  background:#eef3ff;
+  padding:10px;
+  border-radius:8px;
+  margin-top:6px;
+  cursor:pointer;
+}
+
+.popup{
+  position:fixed;
+  top:0;left:0;
+  width:100%;body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4f7fc;
+  padding:20px;
+  padding-bottom:90px;
+}
+
+h2{text-align:center}
+
+.card{
+  background:#fff;
+  padding:18px;
+  border-radius:10px;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+  margin-bottom:20px;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:10px;
+  margin-top:6px;
+  border:1px solid #ccc;
+  border-radius:6px;
+  box-sizing:border-box;
+}
+
+button{
+  padding:10px 15px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:bold;
+  margin-top:10px;
+}
+
+.save{background:#008f39;color:#fff}
+.backup{background:#0066cc;color:#fff}
+.full{width:100%}
+
+#previewTotal{
+  margin-top:12px;
+  padding:10px;
+  background:#eef7ff;
+  border-radius:8px;
+  font-weight:bold;
+  color:#0056b3;
+}
+
+.restore-label{
+  display:block;
+  margin-top:10px;
+  font-weight:bold;
+}
+  background:rgba(0,0,0,.4);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+
+.popupBox{
+  width:90%;
+  max-width:400px;
+}

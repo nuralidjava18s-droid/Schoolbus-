@@ -1,0 +1,54 @@
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4f7fc;
+  padding:20px;
+  padding-bottom:90px;
+}
+
+h2{text-align:center}
+
+.card{
+  background:#fff;
+  padding:18px;
+  border-radius:10px;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+  margin-bottom:20px;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:10px;
+  margin-top:6px;
+  border:1px solid #ccc;
+  border-radius:6px;
+  box-sizing:border-box;
+}
+
+button{
+  padding:10px 15px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:bold;
+  margin-top:10px;
+}
+
+.save{background:#008f39;color:#fff}
+.backup{background:#0066cc;color:#fff}
+.full{width:100%}
+
+#previewTotal{
+  margin-top:12px;
+  padding:10px;
+  background:#eef7ff;
+  border-radius:8px;
+  font-weight:bold;
+  color:#0056b3;
+}
+
+.restore-label{
+  display:block;
+  margin-top:10px;
+  font-weight:bold;
+}

@@ -1,1 +1,76 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background: #f4f6f8;
+}
 
+/* Back Button */
+#btnBack{
+  position:fixed;
+  top:20px;
+  left:20px;
+  background:#ff5252;
+  color:white;
+  border:none;
+  padding:10px 16px;
+  border-radius:8px;
+  font-size:16px;
+  z-index:1000;
+  cursor:pointer;
+}
+
+/* Navbar */
+.nav{
+  background:#007bff;
+  padding:15px;
+  border-radius:10px;
+  margin-bottom:20px;
+  text-align:center;
+  color:white;
+  font-size:22px;
+  font-weight:bold;
+}
+
+.title{
+  text-align:center;
+  margin-top:0;
+}
+
+/* Card */
+.card {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  margin-bottom: 15px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  margin-bottom:10px;
+  border-radius: 8px;
+  border: 1px solid #aaa;
+  font-size: 16px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+}
+
+/* Result */
+.hasil {
+  background: #e8f4ff;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 15px;
+  font-size: 18px;
+}
