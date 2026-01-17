@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalkulator Biaya BBM & Service</title>
+
+<link rel="stylesheet" href="css/bbm.css">
+<link rel="stylesheet" href="css/navbar.css">
+</head>
+<body>
+
+<nav class="nav">
+  Beranda • Kalkulator BBM & Service
+</nav>
+
+<h2 class="title">Kalkulator Biaya BBM & Service</h2>
+
+<div class="card">
+  <label>Jarak Tempuh per Hari (km)</label>
+  <input type="number" id="jarakHari">
+
+  <label>Harga BBM per Liter (Rp)</label>
+  <input type="number" id="hargaBBM">
+
+  <label>Perbandingan BBM (km/l)</label>
+  <input type="number" id="perbandingan">
+
+  <label>Biaya Service per 10.000 km (Rp)</label>
+  <input type="number" id="service">
+
+  <button onclick="hitung()">Hitung</button>
+</div>
+
+<div class="hasil" id="hasil"></div>
+
+<div id="navbar"></div>
+
+<script src="js/bbm.js"></script>
+<script src="js/navbar.js"></script>
+</body>
+</html>

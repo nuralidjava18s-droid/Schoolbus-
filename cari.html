@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Perjalanan</title>
+
+<link rel="stylesheet" href="css/edit.css">
+<link rel="stylesheet" href="css/navbar.css">
+</head>
+
+<body>
+
+<!-- LIST -->
+<div id="listSection" class="card">
+  <h3>Cari Data Perjalanan</h3>
+  <input id="searchBox" placeholder="Cari siswa / driver / tanggal"
+         oninput="searchData()">
+  <div id="resultList"></div>
+</div>
+
+<!-- POPUP -->
+<div id="popupDetail" class="popup">
+  <div class="popupBox card">
+    <h4>Detail Perjalanan</h4>
+    <div id="popupInfo"></div><br>
+    <button class="save" onclick="openEdit()">✏️ Edit</button>
+    <button class="delete" onclick="deleteSelected()">🗑️ Hapus</button>
+    <button class="warning" onclick="closePopup()">Tutup</button>
+  </div>
+</div>
+
+<!-- EDIT -->
+<div id="editSection" class="card" style="display:none">
+  <h3>Edit Data</h3>
+
+  <select id="editDriver"></select>
+  <input type="date" id="editTgl">
+  <input id="editSiswa" placeholder="Nama Siswa">
+  <input id="editKelas" placeholder="Kelas">
+  <input id="editAlamat" placeholder="Alamat">
+  <input id="editJarak" type="number" oninput="recalc()">
+
+  <select id="editTrayek" onchange="recalc()">
+    <option value="Pergi">Pergi</option>
+    <option value="Pulang">Pulang</option>
+    <option value="PP">PP</option>
+  </select>
+
+  <input id="editDisc" type="number" oninput="recalc()">
+  <input id="editTotal" readonly>
+
+  <br><br>
+  <button class="save" onclick="saveChange()">💾 Simpan</button>
+  <button class="warning" onclick="cancelEdit()">↩️ Batal</button>
+</div>
+
+<!-- NAVBAR -->
+<div id="navbar"></div>
+<script src="js/storage.js"></script>
+<script src="js/cari.js"></script>
+<script src="js/navbar.js"></script>
+</body>
+</html>

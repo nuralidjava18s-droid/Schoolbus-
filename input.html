@@ -1,0 +1,71 @@
+<!DOCTYPE html> 
+<html lang="id"> 
+<head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Input Perjalanan</title> 
+  <link rel="stylesheet" href="css/input.css"> 
+  <link rel="stylesheet" href="css/navbar.css"> 
+</head> 
+<body> 
+  <h2>Data Entry School Bus</h2> 
+  <!-- STEP 1 --> 
+  <div class="card" id="driverCard"> 
+    <label>Nama Driver</label> 
+    <select id="pilihDriver"></select> 
+    <button class="save full" onclick="lanjutSiswa()">➡️ Lanjut Input Siswa</button> 
+    <label>Tambah Driver Baru</label> 
+    <input type="text" id="driverBaru"> 
+    <button class="save" onclick="tambahDriver()">💾 Tambah Driver</button> 
+  </div> 
+  <!-- STEP 2 --> 
+  <div id="siswaContainer" style="display:none;"> 
+    <div class="card"> 
+      <h3>Driver: <span id="displayDriver">-</span></h3> 
+      <label>Tanggal</label> 
+      <input type="date" id="tanggalInput"> 
+      <label>Nama Siswa</label> 
+      <input type="text" id="namaSiswa"> 
+      <label>Kelas</label> 
+      <input type="text" id="kelas"> 
+      <label>Alamat</label> 
+      <textarea id="alamat"></textarea> 
+      <label>Jarak (Km)</label> 
+      <input type="number" id="jarak" step="0.1" oninput="updateHarga()"> 
+      <label>Trayek</label> 
+      <select id="trayek" onchange="ubahTrayek()"> 
+        <option value="">-- Pilih Trayek --</option> 
+        <option value="pergi">Pergi</option> 
+        <option value="pulang">Pulang</option> 
+        <option value="pp">PP</option> 
+      </select> 
+      <!-- ONE WAY --> 
+      <div id="onewaySection" style="display:none;"> 
+        <label>Diskon (%)</label> 
+        <input type="number" id="discOneWay" oninput="hitungTotal()"> 
+        <label>Total (Rp)</label> 
+        <input id="totalOneWay" readonly> 
+      </div> 
+      <!-- PP --> 
+      <div id="ppSection" style="display:none;"> 
+        <label>Harga PP (Rp)</label> 
+        <input id="hargaPP" readonly> 
+        <label>Diskon (%)</label> 
+        <input type="number" id="discPP" oninput="hitungTotal()"> 
+        <label>Total PP (Rp)</label> 
+        <input id="totalPP" readonly> 
+      </div> 
+      <button class="save" onclick="simpanData()">💾 Simpan Data</button> 
+      <button class="backup" onclick="exportData()">📦 Backup Data</button> 
+      <label class="restore-label">Restore Data (JSON)</label> 
+      <input type="file" id="restoreFile" accept="application/json" onchange="restoreData()"> 
+      <div id="previewTotal">Preview Total: Rp 0</div> 
+    </div> 
+  </div> 
+  <!-- NAVBAR GLOBAL --> 
+  <div id="navbar"></div>
+  <script src="js/storage.js"></script> 
+  <script src="js/input.js"></script>
+  <script src="js/navbar.js"></script> 
+</body> 
+</html>

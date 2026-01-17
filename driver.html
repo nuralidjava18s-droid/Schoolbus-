@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manajemen Driver</title>
+
+<link rel="stylesheet" href="css/driver.css">
+<link rel="stylesheet" href="css/navbar.css">
+</head>
+<body>
+""
+<div class="header">Manajemen Driver</div>
+
+<div class="card">
+  <h4>Tambah Driver Baru</h4>
+  <input type="text" id="namaDriverBaru" placeholder="Masukkan nama driver">
+  <button class="save" onclick="tambahDriver()">+ Tambah Driver</button>
+</div>
+
+<div class="card">
+  <h4>Daftar Driver</h4>
+  <div id="driverList"></div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- Navbar global -->
+<div id="navbar"></div>
+<script src="js/storage.js"></script>
+<script src="js/driver.js"></script>
+<script src="js/navbar.js"></script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laporan Perjalanan</title>
+  <link rel="stylesheet" href="css/style.css">
+ <link rel="stylesheet" href="css/navbar.css">
+ <link rel="stylesheet" href="css/lapor.css">
+
+</head>
+<body>
+<div id="navbar"></div>
+
+<script>
+fetch("navbar.html")
+  .then(res => {
+    if(!res.ok) throw new Error("Navbar tidak ditemukan");
+    return res.text();
+  })
+  .then(html => {
+    document.getElementById("navbar").innerHTML = html;
+  })
+  .catch(err => {
+    console.error(err);
+  });
+</script>
+<h2>Laporan Perjalanan</h2>
+
+<select id="pilihDriver"></select>
+<input type="month" id="bulanSelect">
+
+<br><br>
+
+<button onclick="tampilLaporan()">Laporan Driver</button>
+<button onclick="tampilSemuaDriver()">Semua Driver</button>
+
+<!-- ================= TABEL DRIVER ================= -->
+<!-- INFO LAPORAN DRIVER -->
+<div id="infoLaporan" class="info-laporan" style="display:none">
+  <div><b>Nama Driver :</b> <span id="infoDriver"></span></div>
+  <div><b>Bulan :</b> <span id="infoBulan"></span></div>
+</div>
+<table id="tabelLapor">
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>Nama Siswa</th>
+      <th>Kelas</th>
+      <th>Alamat</th>
+      <th>Trayek</th>
+      <th>Jarak</th>
+      <th>Total (Rp)</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+<!-- RINGKASAN DRIVER -->
+<div id="ringkasanDriver" class="ringkasan-driver" style="display:none">
+  <div>Total : <b id="totalKotor">Rp 0</b></div>
+  <div>Pot 20% : <b id="potongan">Rp 0</b></div>
+  <hr>
+  <div>Dibayarkan : <b id="totalBersih">Rp 0</b></div>
+</div>
+<!-- TOTAL PER DRIVER -->
+<div id="totalPerDriver" style="margin-top:10px;font-weight:bold;display:none"></div>
+
+<br>
+<div class="table-wrap">
+  <table>
+    ...
+  </table>
+</div>
+<!-- ================= TABEL SEMUA DRIVER ================= -->
+<table id="tabelSemua" style="display:none">
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>Driver</th>
+      <th>Nama Siswa</th>
+      <th>Kelas</th>
+      <th>Alamat</th>
+      <th>Trayek</th>
+      <th>Jarak</th>
+      <th>Total (Rp)</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<!-- TOTAL SEMUA DRIVER -->
+<div class="total-box">
+  <div>Total Driver: <span id="totalDriver">0</span></div>
+  <div>Total Semua: <span id="totalSemua">0</span></div>
+</div>
+<div id="totalSemua" style="margin-top:10px;font-weight:bold;display:none"></div>
+  <div id="navbar"></div> 
+  
+   <script src="js/storage.js"></script>
+   <script src="js/lapor.js"></script>
+  
+</body>
+</html>

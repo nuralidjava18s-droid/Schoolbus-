@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konfigurasi Harga</title>
+
+<link rel="stylesheet" href="css/edit.css">
+<link rel="stylesheet" href="css/navbar.css">
+</head>
+<body>
+
+
+<div class="card">
+  <h2>Konfigurasi Harga</h2>
+
+  <label>Password Admin</label>
+  <input type="password" id="password" placeholder="Masukkan password">
+
+  <label>Harga Dasar (0–1 km)</label>
+  <input type="number" id="hargaDasar">
+
+  <label>Kenaikan per 0.1 km</label>
+  <input type="number" id="kenaikanPerTitik">
+
+  <button class="save" onclick="simpanHarga()">💾 Simpan Harga</button>
+  <button class="reset" onclick="resetHarga()">♻️ Reset ke Default</button>
+  <button class="link" onclick="keinput()">➡️ Lanjut ke input</button>
+</div>
+<div id="navbar"></div>
+<script src="js/storage.js"></script>
+<script src="js/config.js"></script>
+<script src="js/navbar.js"></script>
+</body>
+</html>

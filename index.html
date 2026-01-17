@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard School Bus</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<link rel="stylesheet" href="css/dashboard.css">
+<link rel="stylesheet" href="css/.css">
+<link rel="stylesheet" href="css/navbar.css">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <h2>Masukkan Password</h2>
+  <input type="password" id="passwordInput" placeholder="Password...">
+  <button onclick="checkLogin()">Masuk</button>
+  <div id="loginError"></div>
+</div>
+<div class="header">Dashboard School Bus</div>
+
+<div class="menu-grid">
+  <div class="menu-card" onclick="location.href='input.html'">📝<br>Input Data</div>
+  <div class="menu-card" onclick="location.href='cari.html'">✏️<br>Edit Data</div>
+  <div class="menu-card" onclick="location.href='lapor.html'">📄<br>Laporan</div>
+  <div class="menu-card" onclick="location.href='config.html'">🧑‍✈️<br>Config</div>
+</div>
+
+<div class="card-container">
+  <div class="card" id="cardDriver"><h3>Total Driver</h3><p id="totalDriver">0</p></div>
+  <div class="card" id="cardSiswa"><h3>Total Siswa</h3><p id="totalSiswa">0</p></div>
+  <div class="card" id="cardTrayek"><h3>Total Trayek</h3><p id="totalTrayek">0</p></div>
+  <div class="card" id="cardNew"><h3>Siswa Baru</h3><p id="totalNew">0</p></div>
+</div>
+
+<div id="trayekChartContainer">
+  <h3>Ringkasan Trayek Bulanan</h3>
+  <canvas id="trayekChart"></canvas>
+</div>
+
+<div id="navbar"></div>
+
+<div id="toast" class="toast"></div>
+
+<div id="popupList">
+  <div class="popupBox">
+    <h4 id="popupTitle"></h4>
+    <div id="popupContent"></div>
+    <button onclick="closePopup()">Tutup</button>
+  </div>
+</div>
+
+<!-- JS -->
+<script src="js/storage.js"></script>
+<script src="js/login.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/chart.js"></script>
+<script src="js/navbar.js"></script>
+</body>
+</html>

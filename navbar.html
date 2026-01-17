@@ -1,0 +1,36 @@
+<div class="bottom-nav">
+  <a href="index.html" data-page="index.html">
+    <span>🏠</span>
+    Home
+  </a>
+
+  <a href="bbm.html" data-page="bbm.html">
+    <span>⛽</span>
+    BBM
+  </a>
+
+  <a href="lapor.html" data-page="lapor.html">
+    <span>📄</span>
+    Laporan
+  </a>
+
+  <a href="driver.html" data-page="driver.html">
+    <span>🧑‍✈️</span>
+    Driver
+  </a>
+
+  <!-- LOGOUT -->
+  <a href="#" id="btnLogout">
+    <span>🔒</span>
+    Logout
+  </a>
+</div>
+<script>
+const page = location.pathname.split("/").pop();
+
+document.querySelectorAll(".bottom-nav a").forEach(a => {
+  if(a.dataset.page === page){
+    a.classList.add("active");
+  }
+});
+</script>

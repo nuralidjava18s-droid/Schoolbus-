@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard School Bus</title>
+
+<link rel="stylesheet" href="css/dashboard.css">
+<link rel="stylesheet" href="css/navbar.css">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <h3>Masukkan Password</h3>
+  <input type="password" id="passwordInput" placeholder="Password">
+  <button onclick="checkLogin()">Masuk</button>
+  <div id="loginError"></div>
+</div>
+
+<!-- HEADER -->
+<header class="top-header">
+  <h2>School Bus</h2>
+  <small>Dashboard</small>
+</header>
+
+<!-- STAT CARD -->
+<div class="stat-grid">
+  <div class="stat-card">
+    <span>Total Driver</span>
+    <b id="totalDriver">0</b>
+  </div>
+  <div class="stat-card">
+    <span>Total Siswa</span>
+    <b id="totalSiswa">0</b>
+  </div>
+  <div class="stat-card">
+    <span>Trayek</span>
+    <b id="totalTrayek">0</b>
+  </div>
+  <div class="stat-card">
+    <span>Hari Ini</span>
+    <b id="totalNew">0</b>
+  </div>
+</div>
+
+<!-- MENU -->
+<div class="menu-grid">
+  <div class="menu-btn" onclick="location.href='input.html'">📝<br>Input</div>
+  <div class="menu-btn" onclick="location.href='cari.html'">✏️<br>Edit</div>
+  <div class="menu-btn" onclick="location.href='lapor.html'">📄<br>Laporan</div>
+  <div class="menu-btn" onclick="location.href='driver.html'">🧑‍✈️<br>Driver</div>
+</div>
+
+<div id="navbar"></div>
+
+<script src="js/storage.js"></script>
+<script src="js/login.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/navbar.js"></script>
+</body>
+</html>
