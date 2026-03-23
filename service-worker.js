@@ -6,7 +6,9 @@ const APP_SHELL = [
   "./driver.html",
   "./input.html",
   "./backup.html",
-  "./manifest.json"
+  "./manifest.json",
+  "./icon-192.png",
+  "./icon-512.png"
 ];
 
 self.addEventListener("install", (event) => {
@@ -20,11 +22,9 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
-        })
+        keys
+          .filter((key) => key !== CACHE_NAME)
+          .map((key) => caches.delete(key))
       )
     )
   );
@@ -42,19 +42,19 @@ self.addEventListener("fetch", (event) => {
 
       return fetch(req)
         .then((response) => {
+          if (!response || response.status !== 200 || response.type !== "basic") {
+            return response;
+          }
+
           const responseClone = response.clone();
 
-          if (req.url.startsWith(self.location.origin)) {
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(req, responseClone);
-            });
-          }
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(req, responseClone);
+          });
 
           return response;
         })
-        .catch(() => {
-          return caches.match("./index.html");
-        });
+        .catch(() => caches.match("./index.html"));
     })
   );
 });

@@ -3,15 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>School Bus App</title>
+
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#1e90ff">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="School Bus App">
+
   <style>
-  <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1e90ff">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="School Bus App">
-  
     *{
       box-sizing:border-box;
       margin:0;
@@ -145,17 +147,18 @@
       Versi sederhana • Mobile Friendly
     </div>
   </div>
+
   <script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", async () => {
-      try {
-        await navigator.serviceWorker.register("./service-worker.js");
-        console.log("Service Worker berhasil didaftarkan");
-      } catch (error) {
-        console.error("Service Worker gagal:", error);
-      }
-    });
-  }
-</script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", async () => {
+        try {
+          await navigator.serviceWorker.register("./service-worker.js");
+          console.log("Service Worker berhasil didaftarkan");
+        } catch (error) {
+          console.error("Service Worker gagal:", error);
+        }
+      });
+    }
+  </script>
 </body>
 </html>
