@@ -1,71 +1,715 @@
-<!DOCTYPE html> 
-<html lang="id"> 
-<head> 
-  <meta charset="UTF-8"> 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-  <title>Input Perjalanan</title> 
-  <link rel="stylesheet" href="css/input.css"> 
-  <link rel="stylesheet" href="css/navbar.css"> 
-</head> 
-<body> 
-  <h2>Data Entry School Bus</h2> 
-  <!-- STEP 1 --> 
-  <div class="card" id="driverCard"> 
-    <label>Nama Driver</label> 
-    <select id="pilihDriver"></select> 
-    <button class="save full" onclick="lanjutSiswa()">➡️ Lanjut Input Siswa</button> 
-    <label>Tambah Driver Baru</label> 
-    <input type="text" id="driverBaru"> 
-    <button class="save" onclick="tambahDriver()">💾 Tambah Driver</button> 
-  </div> 
-  <!-- STEP 2 --> 
-  <div id="siswaContainer" style="display:none;"> 
-    <div class="card"> 
-      <h3>Driver: <span id="displayDriver">-</span></h3> 
-      <label>Tanggal</label> 
-      <input type="date" id="tanggalInput"> 
-      <label>Nama Siswa</label> 
-      <input type="text" id="namaSiswa"> 
-      <label>Kelas</label> 
-      <input type="text" id="kelas"> 
-      <label>Alamat</label> 
-      <textarea id="alamat"></textarea> 
-      <label>Jarak (Km)</label> 
-      <input type="number" id="jarak" step="0.1" oninput="updateHarga()"> 
-      <label>Trayek</label> 
-      <select id="trayek" onchange="ubahTrayek()"> 
-        <option value="">-- Pilih Trayek --</option> 
-        <option value="pergi">Pergi</option> 
-        <option value="pulang">Pulang</option> 
-        <option value="pp">PP</option> 
-      </select> 
-      <!-- ONE WAY --> 
-      <div id="onewaySection" style="display:none;"> 
-        <label>Diskon (%)</label> 
-        <input type="number" id="discOneWay" oninput="hitungTotal()"> 
-        <label>Total (Rp)</label> 
-        <input id="totalOneWay" readonly> 
-      </div> 
-      <!-- PP --> 
-      <div id="ppSection" style="display:none;"> 
-        <label>Harga PP (Rp)</label> 
-        <input id="hargaPP" readonly> 
-        <label>Diskon (%)</label> 
-        <input type="number" id="discPP" oninput="hitungTotal()"> 
-        <label>Total PP (Rp)</label> 
-        <input id="totalPP" readonly> 
-      </div> 
-      <button class="save" onclick="simpanData()">💾 Simpan Data</button> 
-      <button class="backup" onclick="exportData()">📦 Backup Data</button> 
-      <label class="restore-label">Restore Data (JSON)</label> 
-      <input type="file" id="restoreFile" accept="application/json" onchange="restoreData()"> 
-      <div id="previewTotal">Preview Total: Rp 0</div> 
-    </div> 
-  </div> 
-  <!-- NAVBAR GLOBAL --> 
-  <div id="navbar"></div>
-  <script src="js/storage.js"></script> 
-  <script src="js/input.js"></script>
-  <script src="js/navbar.js"></script> 
-</body> 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Input Perjalanan Firebase</title>
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1e90ff">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="School Bus App">
+  <style>
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
+
+    :root{
+      --primary:#1e90ff;
+      --primary-dark:#187bdb;
+      --success:#16a34a;
+      --bg:#f4f7fb;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --border:#dbe3ee;
+      --shadow:0 8px 24px rgba(15,23,42,.08);
+      --radius:18px;
+    }
+
+    body{
+      font-family:Arial,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      padding:16px;
+      padding-bottom:90px;
+      max-width:760px;
+      margin:0 auto;
+    }
+
+    .topbar{
+      background:linear-gradient(135deg,#1e90ff,#60a5fa);
+      color:#fff;
+      border-radius:22px;
+      padding:20px;
+      margin-bottom:16px;
+      box-shadow:0 12px 30px rgba(30,144,255,.20);
+    }
+
+    .topbar-title{
+      font-size:24px;
+      font-weight:700;
+      margin-bottom:6px;
+    }
+
+    .topbar-subtitle{
+      font-size:13px;
+      line-height:1.6;
+      opacity:.95;
+    }
+
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:16px;
+      margin-bottom:16px;
+      box-shadow:var(--shadow);
+      border:1px solid #edf2f7;
+    }
+
+    h3{
+      margin-bottom:12px;
+      color:#111827;
+      font-size:18px;
+    }
+
+    label{
+      display:block;
+      font-size:14px;
+      font-weight:600;
+      margin-bottom:6px;
+      margin-top:12px;
+      color:#374151;
+    }
+
+    input,
+    select,
+    textarea{
+      width:100%;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:12px 14px;
+      font-size:14px;
+      outline:none;
+      background:#fff;
+      transition:.2s ease;
+    }
+
+    textarea{
+      min-height:90px;
+      resize:vertical;
+      font-family:Arial,sans-serif;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus{
+      border-color:var(--primary);
+      box-shadow:0 0 0 4px rgba(30,144,255,.10);
+    }
+
+    input[readonly]{
+      background:#f8fafc;
+      color:#6b7280;
+      font-weight:700;
+    }
+
+    .save,
+    .backup{
+      width:100%;
+      border:none;
+      border-radius:12px;
+      padding:13px 14px;
+      font-size:14px;
+      font-weight:700;
+      color:#fff;
+      cursor:pointer;
+      margin-top:14px;
+      transition:.2s ease;
+    }
+
+    .save{ background:var(--primary); }
+    .save:hover{ background:var(--primary-dark); }
+    .backup{ background:var(--success); }
+
+    .full{ width:100%; }
+    .restore-label{ margin-top:16px; }
+
+    #previewTotal{
+      margin-top:14px;
+      padding:12px 14px;
+      border-radius:12px;
+      background:#eff6ff;
+      color:#1d4ed8;
+      font-weight:700;
+      text-align:center;
+    }
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:24px;
+      transform:translateX(-50%);
+      background:#111827;
+      color:#fff;
+      padding:12px 16px;
+      border-radius:10px;
+      opacity:0;
+      pointer-events:none;
+      transition:.25s;
+      z-index:9999;
+      max-width:90%;
+      text-align:center;
+      box-shadow:0 10px 30px rgba(0,0,0,.18);
+    }
+
+    .toast.show{
+      opacity:1;
+    }
+
+    .mini-note{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:8px;
+      line-height:1.5;
+    }
+
+    .section-box{
+      padding:12px;
+      border:1px dashed var(--border);
+      border-radius:14px;
+      margin-top:12px;
+      background:#fafcff;
+    }
+
+    .navbar{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:10px;
+      width:min(760px, calc(100% - 20px));
+      background:#fff;
+      border:1px solid #e5e7eb;
+      box-shadow:0 8px 25px rgba(15,23,42,.10);
+      border-radius:18px;
+      padding:8px 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      z-index:999;
+    }
+
+    .nav-left,
+    .nav-center,
+    .nav-right{
+      display:flex;
+      align-items:center;
+    }
+
+    .nav-left,
+    .nav-right{
+      flex:1;
+    }
+
+    .nav-center{
+      flex:1.4;
+      justify-content:center;
+      min-width:0;
+    }
+
+    .nav-right{
+      justify-content:flex-end;
+    }
+
+    .nav-title{
+      font-size:14px;
+      font-weight:700;
+      color:#334155;
+      text-align:center;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .nav-btn{
+      text-decoration:none;
+      text-align:center;
+      color:#64748b;
+      font-weight:700;
+      font-size:14px;
+      padding:10px 14px;
+      border-radius:12px;
+      background:#f8fafc;
+      border:none;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      min-width:90px;
+      transition:.2s ease;
+    }
+
+    .nav-btn:hover{
+      background:#e2e8f0;
+    }
+
+    @media (max-width:480px){
+      .navbar{
+        gap:6px;
+        padding:8px;
+      }
+
+      .nav-btn{
+        min-width:auto;
+        padding:10px 12px;
+        font-size:13px;
+      }
+
+      .nav-title{
+        font-size:13px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="topbar-title">Input Perjalanan Firebase</div>
+    <div class="topbar-subtitle">Input data perjalanan siswa berdasarkan driver, trayek, jarak, dan harga otomatis.</div>
+  </div>
+
+  <div class="card" id="driverCard">
+    <label>Nama Driver</label>
+    <select id="pilihDriver">
+      <option value="">-- Memuat driver... --</option>
+    </select>
+    <button class="save full" onclick="lanjutSiswa()">➡️ Lanjut Input Siswa</button>
+    <div class="mini-note" id="infoHarga">Memuat konfigurasi harga...</div>
+  </div>
+
+  <div id="siswaContainer" style="display:none;">
+    <div class="card">
+      <h3>Driver: <span id="displayDriver">-</span></h3>
+
+      <label>Tanggal</label>
+      <input type="date" id="tanggalInput">
+
+      <label>Nama Siswa</label>
+      <input type="text" id="namaSiswa" placeholder="Masukkan nama siswa">
+
+      <label>Kelas</label>
+      <input type="text" id="kelas" placeholder="Masukkan kelas">
+
+      <label>Alamat</label>
+      <textarea id="alamat" placeholder="Masukkan alamat siswa"></textarea>
+
+      <label>Jarak (Km)</label>
+      <input type="number" id="jarak" step="0.1" placeholder="Masukkan jarak" oninput="updateHarga()">
+
+      <label>Trayek</label>
+      <select id="trayek" onchange="ubahTrayek()">
+        <option value="">-- Pilih Trayek --</option>
+        <option value="pergi">Pergi</option>
+        <option value="pulang">Pulang</option>
+        <option value="pp">PP</option>
+      </select>
+
+      <div id="onewaySection" class="section-box" style="display:none;">
+        <label>Harga One Way (Rp)</label>
+        <input id="hargaOneWay" readonly>
+
+        <label>Diskon (%)</label>
+        <input type="number" id="discOneWay" value="0" oninput="hitungTotal()">
+
+        <label>Total (Rp)</label>
+        <input id="totalOneWay" readonly>
+      </div>
+
+      <div id="ppSection" class="section-box" style="display:none;">
+        <label>Harga PP (Rp)</label>
+        <input id="hargaPP" readonly>
+
+        <label>Diskon (%)</label>
+        <input type="number" id="discPP" value="0" oninput="hitungTotal()">
+
+        <label>Total PP (Rp)</label>
+        <input id="totalPP" readonly>
+      </div>
+
+      <button class="save" onclick="simpanData()">💾 Simpan Data</button>
+      <button class="backup" onclick="exportData()">📦 Backup Data</button>
+
+      <label class="restore-label">Restore Data (JSON)</label>
+      <input type="file" id="restoreFile" accept="application/json" onchange="restoreData()">
+
+      <div id="previewTotal">Preview Total: Rp 0</div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <div class="navbar">
+    <div class="nav-left">
+      <button class="nav-btn" onclick="goBack()">⬅️ <span>Back</span></button>
+    </div>
+
+    <div class="nav-center">
+      <div class="nav-title">School Bus App</div>
+    </div>
+
+    <div class="nav-right">
+      <a href="index.html" class="nav-btn">🏠 <span>Home</span></a>
+    </div>
+  </div>
+  
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      addDoc,
+      doc,
+      getDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBxbArCZ6iIWQ8wS7QIonZOeN4t_r9o2WU",
+      authDomain: "schoolbus-6a7fd.firebaseapp.com",
+      databaseURL: "https://schoolbus-6a7fd-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "schoolbus-6a7fd",
+      storageBucket: "schoolbus-6a7fd.firebasestorage.app",
+      messagingSenderId: "486602913199",
+      appId: "1:486602913199:web:9547f39f5f57f9c87b2b5a"
+    };
+
+    const DEFAULT_HARGA_DASAR = 608000;
+    const DEFAULT_KENAIKAN = 7800;
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let selectedDriver = null;
+    let daftarDriver = [];
+    let configHarga = {
+      hargaDasar: DEFAULT_HARGA_DASAR,
+      kenaikanPerTitik: DEFAULT_KENAIKAN
+    };
+
+    function showToast(message){
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(() => toast.classList.remove("show"), 2500);
+    }
+
+    function rupiah(angka){
+      return "Rp " + Number(angka || 0).toLocaleString("id-ID");
+    }
+
+    function getToday(){
+      return new Date().toISOString().split("T")[0];
+    }
+
+    async function loadConfigHarga(){
+      try{
+        const ref = doc(db, "config", "harga");
+        const snap = await getDoc(ref);
+
+        if(snap.exists()){
+          const data = snap.data();
+          configHarga.hargaDasar = Number(data.hargaDasar ?? DEFAULT_HARGA_DASAR);
+          configHarga.kenaikanPerTitik = Number(data.kenaikanPerTitik ?? DEFAULT_KENAIKAN);
+        }
+
+        document.getElementById("infoHarga").textContent =
+          `Harga aktif: ${rupiah(configHarga.hargaDasar)} | Kenaikan per 0.1 km: ${rupiah(configHarga.kenaikanPerTitik)}`;
+      }catch(error){
+        console.error(error);
+        document.getElementById("infoHarga").textContent =
+          `Gagal memuat konfigurasi. Dipakai default: ${rupiah(DEFAULT_HARGA_DASAR)} / ${rupiah(DEFAULT_KENAIKAN)}`;
+      }
+    }
+
+    function hitungHargaDasar(jarak){
+      const km = Number(jarak || 0);
+
+      if(km <= 0) return 0;
+      if(km <= 1) return configHarga.hargaDasar;
+
+      const titik = Math.ceil((km - 1) / 0.1);
+      return configHarga.hargaDasar + (titik * configHarga.kenaikanPerTitik);
+    }
+
+    async function loadDrivers(){
+      const pilihDriver = document.getElementById("pilihDriver");
+      pilihDriver.innerHTML = '<option value="">-- Pilih Driver --</option>';
+
+      try{
+        const snapshot = await getDocs(collection(db, "drivers"));
+        daftarDriver = [];
+
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          daftarDriver.push({
+            docId: docSnap.id,
+            idAnggota: data.idAnggota || "",
+            nama: data.nama || ""
+          });
+        });
+
+        daftarDriver.sort((a, b) => a.nama.localeCompare(b.nama, "id"));
+
+        if(daftarDriver.length === 0){
+          pilihDriver.innerHTML = '<option value="">-- Belum ada driver --</option>';
+          return;
+        }
+
+        daftarDriver.forEach((driver, index) => {
+          const opt = document.createElement("option");
+          opt.value = index;
+          opt.textContent = `${driver.nama}${driver.idAnggota ? " (" + driver.idAnggota + ")" : ""}`;
+          pilihDriver.appendChild(opt);
+        });
+      }catch(error){
+        console.error(error);
+        pilihDriver.innerHTML = '<option value="">-- Gagal memuat driver --</option>';
+        showToast("Gagal memuat data driver");
+      }
+    }
+
+    function lanjutSiswa(){
+      const pilih = document.getElementById("pilihDriver").value;
+
+      if(pilih === ""){
+        showToast("Pilih driver dulu");
+        return;
+      }
+
+      selectedDriver = daftarDriver[Number(pilih)];
+      document.getElementById("displayDriver").textContent = selectedDriver.nama || "-";
+      document.getElementById("siswaContainer").style.display = "block";
+
+      window.scrollTo({
+        top: document.getElementById("siswaContainer").offsetTop - 10,
+        behavior: "smooth"
+      });
+    }
+
+    function ubahTrayek(){
+      const trayek = document.getElementById("trayek").value;
+      document.getElementById("onewaySection").style.display =
+        (trayek === "pergi" || trayek === "pulang") ? "block" : "none";
+      document.getElementById("ppSection").style.display =
+        trayek === "pp" ? "block" : "none";
+
+      hitungTotal();
+    }
+
+    function updateHarga(){
+      hitungTotal();
+    }
+
+    function hitungTotal(){
+      const jarak = Number(document.getElementById("jarak").value || 0);
+      const trayek = document.getElementById("trayek").value;
+      const hargaOneWay = hitungHargaDasar(jarak);
+      let total = 0;
+
+      if(trayek === "pergi" || trayek === "pulang"){
+        const diskon = Number(document.getElementById("discOneWay").value || 0);
+        total = hargaOneWay - (hargaOneWay * diskon / 100);
+        document.getElementById("hargaOneWay").value = Math.round(hargaOneWay);
+        document.getElementById("totalOneWay").value = Math.round(total);
+        document.getElementById("hargaPP").value = "";
+        document.getElementById("totalPP").value = "";
+      }else if(trayek === "pp"){
+        const hargaPP = hargaOneWay * 2;
+        const diskonPP = Number(document.getElementById("discPP").value || 0);
+        total = hargaPP - (hargaPP * diskonPP / 100);
+        document.getElementById("hargaPP").value = Math.round(hargaPP);
+        document.getElementById("totalPP").value = Math.round(total);
+        document.getElementById("hargaOneWay").value = "";
+        document.getElementById("totalOneWay").value = "";
+      }else{
+        document.getElementById("hargaOneWay").value = "";
+        document.getElementById("totalOneWay").value = "";
+        document.getElementById("hargaPP").value = "";
+        document.getElementById("totalPP").value = "";
+      }
+
+      document.getElementById("previewTotal").textContent =
+        "Preview Total: " + rupiah(Math.round(total));
+
+      return Math.round(total);
+    }
+
+    async function simpanData(){
+      const tanggal = document.getElementById("tanggalInput").value;
+      const namaSiswa = document.getElementById("namaSiswa").value.trim();
+      const kelas = document.getElementById("kelas").value.trim();
+      const alamat = document.getElementById("alamat").value.trim();
+      const jarak = Number(document.getElementById("jarak").value || 0);
+      const trayek = document.getElementById("trayek").value;
+
+      if(!selectedDriver){
+        showToast("Pilih driver terlebih dahulu");
+        return;
+      }
+
+      if(!tanggal || !namaSiswa || !kelas || !alamat || !jarak || !trayek){
+        showToast("Semua field wajib diisi");
+        return;
+      }
+
+      const hargaDasar = hitungHargaDasar(jarak);
+      const total = hitungTotal();
+      const diskon = trayek === "pp"
+        ? Number(document.getElementById("discPP").value || 0)
+        : Number(document.getElementById("discOneWay").value || 0);
+
+      const data = {
+        driverId: selectedDriver.docId || "",
+        idAnggotaDriver: selectedDriver.idAnggota || "",
+        namaDriver: selectedDriver.nama || "",
+        tanggal,
+        namaSiswa,
+        kelas,
+        alamat,
+        jarak,
+        trayek,
+        hargaDasar,
+        hargaPP: trayek === "pp" ? hargaDasar * 2 : 0,
+        diskon,
+        total,
+        hargaConfigAwal: configHarga.hargaDasar,
+        kenaikanPerTitik: configHarga.kenaikanPerTitik,
+        createdAt: serverTimestamp()
+      };
+
+      try{
+        await addDoc(collection(db, "perjalanan"), data);
+        showToast("Data perjalanan berhasil disimpan");
+        simpanBackupLokal(data);
+        resetFormInput();
+      }catch(error){
+        console.error(error);
+        showToast("Gagal menyimpan data");
+      }
+    }
+
+    function simpanBackupLokal(data){
+      const key = "schoolbus_perjalanan_backup";
+      const oldData = JSON.parse(localStorage.getItem(key) || "[]");
+      oldData.push({ ...data, createdAtLocal: Date.now() });
+      localStorage.setItem(key, JSON.stringify(oldData));
+    }
+
+    function resetFormInput(){
+      document.getElementById("tanggalInput").value = getToday();
+      document.getElementById("namaSiswa").value = "";
+      document.getElementById("kelas").value = "";
+      document.getElementById("alamat").value = "";
+      document.getElementById("jarak").value = "";
+      document.getElementById("trayek").value = "";
+      document.getElementById("discOneWay").value = "0";
+      document.getElementById("discPP").value = "0";
+      document.getElementById("hargaOneWay").value = "";
+      document.getElementById("totalOneWay").value = "";
+      document.getElementById("hargaPP").value = "";
+      document.getElementById("totalPP").value = "";
+      document.getElementById("previewTotal").textContent = "Preview Total: Rp 0";
+      document.getElementById("onewaySection").style.display = "none";
+      document.getElementById("ppSection").style.display = "none";
+    }
+
+    function exportData(){
+      const key = "schoolbus_perjalanan_backup";
+      const data = JSON.parse(localStorage.getItem(key) || "[]");
+
+      if(!data.length){
+        showToast("Belum ada data backup");
+        return;
+      }
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "backup-perjalanan.json";
+      a.click();
+      URL.revokeObjectURL(url);
+
+      showToast("Backup berhasil diunduh");
+    }
+
+    function restoreData(){
+      const fileInput = document.getElementById("restoreFile");
+      const file = fileInput.files[0];
+      if(!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e){
+        try{
+          const jsonData = JSON.parse(e.target.result);
+          if(!Array.isArray(jsonData)){
+            showToast("Format JSON tidak valid");
+            return;
+          }
+
+          localStorage.setItem("schoolbus_perjalanan_backup", JSON.stringify(jsonData));
+          showToast("Restore backup lokal berhasil");
+          fileInput.value = "";
+        }catch(error){
+          console.error(error);
+          showToast("Gagal restore file");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function goBack(){
+      if(window.history.length > 1){
+        window.history.back();
+      }else{
+        window.location.href = "index.html";
+      }
+    }
+
+    window.goBack = goBack;
+    window.lanjutSiswa = lanjutSiswa;
+    window.ubahTrayek = ubahTrayek;
+    window.updateHarga = updateHarga;
+    window.hitungTotal = hitungTotal;
+    window.simpanData = simpanData;
+    window.exportData = exportData;
+    window.restoreData = restoreData;
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      document.getElementById("tanggalInput").value = getToday();
+      await loadConfigHarga();
+      await loadDrivers();
+    });
+  
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", async () => {
+      try {
+        await navigator.serviceWorker.register("./service-worker.js");
+        console.log("Service Worker berhasil didaftarkan");
+      } catch (error) {
+        console.error("Service Worker gagal:", error);
+      }
+    });
+  }
+  
+  
+  </script>
+</body>
 </html>

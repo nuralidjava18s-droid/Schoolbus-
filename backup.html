@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backup & Restore Firebase</title>
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1e90ff">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="School Bus App">
+  <style>
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
+
+    :root{
+      --primary:#1e90ff;
+      --primary-dark:#187bdb;
+      --success:#16a34a;
+      --danger:#ef4444;
+      --warning:#f59e0b;
+      --bg:#f4f7fb;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --border:#dbe3ee;
+      --shadow:0 8px 24px rgba(15,23,42,.08);
+      --radius:18px;
+    }
+
+    body{
+      font-family:Arial,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      padding:16px;
+      padding-bottom:95px;
+      max-width:760px;
+      margin:0 auto;
+    }
+
+    .header{
+      background:linear-gradient(135deg,#1e90ff,#60a5fa);
+      color:#fff;
+      border-radius:22px;
+      padding:20px;
+      margin-bottom:16px;
+      box-shadow:0 12px 30px rgba(30,144,255,.20);
+    }
+
+    .header h1{
+      font-size:24px;
+      margin-bottom:6px;
+    }
+
+    .header p{
+      font-size:13px;
+      line-height:1.6;
+      opacity:.95;
+    }
+
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:16px;
+      margin-bottom:16px;
+      box-shadow:var(--shadow);
+      border:1px solid #edf2f7;
+    }
+
+    .card h3{
+      font-size:18px;
+      margin-bottom:10px;
+      color:#111827;
+    }
+
+    .note{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.6;
+      margin-bottom:12px;
+    }
+
+    .btn{
+      width:100%;
+      border:none;
+      border-radius:12px;
+      padding:13px 14px;
+      font-size:14px;
+      font-weight:700;
+      cursor:pointer;
+      margin-top:10px;
+      transition:.2s ease;
+    }
+
+    .btn-primary{
+      background:var(--primary);
+      color:#fff;
+    }
+
+    .btn-primary:hover{
+      background:var(--primary-dark);
+    }
+
+    .btn-success{
+      background:var(--success);
+      color:#fff;
+    }
+
+    .btn-success:hover{
+      filter:brightness(.96);
+    }
+
+    .btn-danger{
+      background:var(--danger);
+      color:#fff;
+    }
+
+    .btn-danger:hover{
+      filter:brightness(.96);
+    }
+
+    .btn-warning{
+      background:var(--warning);
+      color:#111827;
+    }
+
+    .btn-warning:hover{
+      filter:brightness(.96);
+    }
+
+    input[type="file"]{
+      width:100%;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:12px;
+      background:#fff;
+      font-size:14px;
+      margin-top:10px;
+      outline:none;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .stat-box{
+      background:#f8fbff;
+      border:1px solid #dcecff;
+      border-radius:14px;
+      padding:14px;
+      text-align:center;
+    }
+
+    .stat-box .label{
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+
+    .stat-box .value{
+      font-size:20px;
+      font-weight:800;
+      color:var(--primary);
+    }
+
+    .log{
+      background:#0f172a;
+      color:#e2e8f0;
+      border-radius:14px;
+      padding:14px;
+      font-size:12px;
+      line-height:1.6;
+      min-height:120px;
+      max-height:260px;
+      overflow:auto;
+      white-space:pre-wrap;
+      margin-top:10px;
+    }
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:84px;
+      transform:translateX(-50%);
+      background:#111827;
+      color:#fff;
+      padding:12px 16px;
+      border-radius:10px;
+      opacity:0;
+      pointer-events:none;
+      transition:.25s;
+      z-index:9999;
+      max-width:90%;
+      text-align:center;
+      box-shadow:0 10px 30px rgba(0,0,0,.18);
+    }
+
+    .toast.show{
+      opacity:1;
+    }
+
+    .navbar{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:10px;
+      width:min(760px, calc(100% - 20px));
+      background:#fff;
+      border:1px solid #e5e7eb;
+      box-shadow:0 8px 25px rgba(15,23,42,.10);
+      border-radius:18px;
+      padding:8px 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      z-index:999;
+    }
+
+    .nav-left,
+    .nav-center,
+    .nav-right{
+      display:flex;
+      align-items:center;
+    }
+
+    .nav-left,
+    .nav-right{
+      flex:1;
+    }
+
+    .nav-center{
+      flex:1.4;
+      justify-content:center;
+      min-width:0;
+    }
+
+    .nav-right{
+      justify-content:flex-end;
+    }
+
+    .nav-title{
+      font-size:14px;
+      font-weight:700;
+      color:#334155;
+      text-align:center;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .nav-btn{
+      text-decoration:none;
+      text-align:center;
+      color:#64748b;
+      font-weight:700;
+      font-size:14px;
+      padding:10px 14px;
+      border-radius:12px;
+      background:#f8fafc;
+      border:none;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      min-width:90px;
+      transition:.2s ease;
+    }
+
+    .nav-btn:hover{
+      background:#e2e8f0;
+    }
+
+    @media (max-width:480px){
+      .stats{
+        grid-template-columns:1fr;
+      }
+
+      .header h1{
+        font-size:20px;
+      }
+
+      .navbar{
+        gap:6px;
+        padding:8px;
+      }
+
+      .nav-btn{
+        min-width:auto;
+        padding:10px 12px;
+        font-size:13px;
+      }
+
+      .nav-title{
+        font-size:13px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>Backup & Restore Firebase</h1>
+    <p>Backup semua data Firestore ke file JSON dan restore kembali saat dibutuhkan.</p>
+  </div>
+
+  <div class="card">
+    <h3>Backup Data</h3>
+    <div class="note">
+      Tombol ini akan mengambil data dari beberapa collection Firestore lalu menyimpannya ke file JSON.
+    </div>
+    <button class="btn btn-primary" onclick="backupFirestore()">📦 Backup Firestore</button>
+
+    <div class="stats">
+      <div class="stat-box">
+        <div class="label">Jumlah Collection</div>
+        <div class="value" id="totalCollection">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="label">Jumlah Dokumen</div>
+        <div class="value" id="totalDokumen">0</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Restore Data</h3>
+    <div class="note">
+      Pilih file backup JSON, lalu tekan restore. Bisa pilih restore biasa atau hapus dulu isi collection lalu isi ulang.
+    </div>
+
+    <input type="file" id="fileRestore" accept=".json">
+    <button type="button" class="btn btn-success" onclick="restoreFirestore(false)">♻️ Restore / Tambah Data</button>
+    <button type="button" class="btn btn-warning" onclick="restoreFirestore(true)">📥 Hapus Lalu Restore</button>
+    <button type="button" class="btn btn-danger" onclick="hapusSemuaFirestore()">🗑️ Hapus Semua Data</button>
+  </div>
+
+  <div class="card">
+    <h3>Log Proses</h3>
+    <div id="logBox" class="log">Siap digunakan...</div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <div class="navbar">
+    <div class="nav-left">
+      <button class="nav-btn" onclick="goBack()">⬅️ <span>Back</span></button>
+    </div>
+
+    <div class="nav-center">
+      <div class="nav-title">School Bus App</div>
+    </div>
+
+    <div class="nav-right">
+      <a href="index.html" class="nav-btn">🏠 <span>Home</span></a>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      doc,
+      setDoc,
+      deleteDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBxbArCZ6iIWQ8wS7QIonZOeN4t_r9o2WU",
+      authDomain: "schoolbus-6a7fd.firebaseapp.com",
+      databaseURL: "https://schoolbus-6a7fd-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "schoolbus-6a7fd",
+      storageBucket: "schoolbus-6a7fd.firebasestorage.app",
+      messagingSenderId: "486602913199",
+      appId: "1:486602913199:web:9547f39f5f57f9c87b2b5a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const COLLECTIONS = ["drivers", "perjalanan", "config"];
+
+    function showToast(message){
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(() => toast.classList.remove("show"), 2500);
+    }
+
+    function setLog(text){
+      document.getElementById("logBox").textContent = text;
+    }
+
+    function addLog(text){
+      const box = document.getElementById("logBox");
+      box.textContent += "\\n" + text;
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function getFileName(){
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth()+1).padStart(2,"0");
+      const d = String(now.getDate()).padStart(2,"0");
+      const hh = String(now.getHours()).padStart(2,"0");
+      const mm = String(now.getMinutes()).padStart(2,"0");
+      return `backup-firestore-${y}-${m}-${d}-${hh}-${mm}.json`;
+    }
+
+    async function backupFirestore(){
+      try{
+        setLog("Memulai backup Firestore...");
+        let totalCollection = 0;
+        let totalDokumen = 0;
+
+        const backupData = {
+          app: "School Bus App",
+          dibuatPada: new Date().toISOString(),
+          collections: {}
+        };
+
+        for(const namaCollection of COLLECTIONS){
+          addLog("Mengambil collection: " + namaCollection);
+
+          const snapshot = await getDocs(collection(db, namaCollection));
+          backupData.collections[namaCollection] = [];
+
+          snapshot.forEach((docSnap) => {
+            backupData.collections[namaCollection].push({
+              id: docSnap.id,
+              data: docSnap.data()
+            });
+            totalDokumen++;
+          });
+
+          totalCollection++;
+          addLog(`Selesai ${namaCollection}: ${backupData.collections[namaCollection].length} dokumen`);
+        }
+
+        document.getElementById("totalCollection").textContent = totalCollection;
+        document.getElementById("totalDokumen").textContent = totalDokumen;
+
+        const blob = new Blob([JSON.stringify(backupData, null, 2)], {
+          type: "application/json"
+        });
+
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = getFileName();
+        a.click();
+        URL.revokeObjectURL(url);
+
+        addLog("Backup selesai dan file berhasil diunduh.");
+        showToast("Backup berhasil");
+      }catch(error){
+        console.error(error);
+        addLog("Error backup: " + error.message);
+        showToast("Backup gagal");
+      }
+    }
+
+    async function hapusIsiCollection(namaCollection){
+      const snapshot = await getDocs(collection(db, namaCollection));
+      const jobs = [];
+
+      snapshot.forEach((docSnap) => {
+        jobs.push(deleteDoc(doc(db, namaCollection, docSnap.id)));
+      });
+
+      await Promise.all(jobs);
+    }
+
+    async function restoreFirestore(hapusDulu = false){
+      const input = document.getElementById("fileRestore");
+      const file = input.files[0];
+
+      if(!file){
+        showToast("Pilih file JSON dulu");
+        return;
+      }
+
+      try{
+        setLog("Membaca file backup...");
+        const text = await file.text();
+        const json = JSON.parse(text);
+
+        if(!json.collections || typeof json.collections !== "object"){
+          showToast("Format file tidak valid");
+          addLog("Format JSON tidak sesuai");
+          return;
+        }
+
+        let totalRestore = 0;
+
+        for(const namaCollection of Object.keys(json.collections)){
+          const items = json.collections[namaCollection];
+
+          if(!Array.isArray(items)) continue;
+
+          addLog("Proses collection: " + namaCollection);
+
+          if(hapusDulu){
+            addLog("Menghapus isi collection lama: " + namaCollection);
+            await hapusIsiCollection(namaCollection);
+          }
+
+          for(const item of items){
+            if(!item.id || !item.data) continue;
+
+            await setDoc(doc(db, namaCollection, item.id), item.data);
+            totalRestore++;
+          }
+
+          addLog(`Restore selesai ${namaCollection}: ${items.length} dokumen`);
+        }
+
+        addLog("Restore selesai. Total dokumen: " + totalRestore);
+        showToast("Restore berhasil");
+      }catch(error){
+        console.error(error);
+        addLog("Error restore: " + error.message);
+        showToast("Restore gagal");
+      }
+    }
+
+    async function hapusSemuaFirestore(){
+      const yakin = confirm("Yakin ingin menghapus semua data Firebase?");
+      if(!yakin) return;
+
+      try{
+        setLog("Memulai hapus semua data Firebase...");
+        let totalHapus = 0;
+
+        for(const namaCollection of COLLECTIONS){
+          addLog("Menghapus collection: " + namaCollection);
+
+          const snapshot = await getDocs(collection(db, namaCollection));
+          const jobs = [];
+
+          snapshot.forEach((docSnap) => {
+            jobs.push(deleteDoc(doc(db, namaCollection, docSnap.id)));
+            totalHapus++;
+          });
+
+          await Promise.all(jobs);
+          addLog("Selesai hapus collection: " + namaCollection);
+        }
+
+        document.getElementById("totalDokumen").textContent = 0;
+        addLog("Semua data berhasil dihapus. Total dokumen dihapus: " + totalHapus);
+        showToast("Semua data berhasil dihapus");
+      }catch(error){
+        console.error(error);
+        addLog("Error hapus: " + error.message);
+        showToast("Gagal menghapus data");
+      }
+    }
+
+    function goBack(){
+      if(window.history.length > 1){
+        window.history.back();
+      }else{
+        window.location.href = "index.html";
+      }
+    }
+
+    window.backupFirestore = backupFirestore;
+    window.restoreFirestore = restoreFirestore;
+    window.hapusSemuaFirestore = hapusSemuaFirestore;
+    window.goBack = goBack;
+  
+ 
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", async () => {
+      try {
+        await navigator.serviceWorker.register("./service-worker.js");
+        console.log("Service Worker berhasil didaftarkan");
+      } catch (error) {
+        console.error("Service Worker gagal:", error);
+      }
+    });
+  }
+</script>
+ 
+</body>
+</html>

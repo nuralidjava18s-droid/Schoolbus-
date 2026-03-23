@@ -1,62 +1,396 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard School Bus</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - School Bus App</title>
+  <style>
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1e90ff">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="School Bus App">
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
 
-<link rel="stylesheet" href="css/dashboard.css">
-<link rel="stylesheet" href="css/navbar.css">
+    :root{
+      --primary:#1e90ff;
+      --primary-dark:#187bdb;
+      --success:#16a34a;
+      --warning:#f59e0b;
+      --danger:#ef4444;
+      --purple:#7c3aed;
+      --cyan:#06b6d4;
+      --bg:#f4f7fb;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --border:#dbe3ee;
+      --shadow:0 10px 28px rgba(15,23,42,.08);
+      --radius:22px;
+    }
+
+    body{
+      font-family:Arial,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      padding:16px;
+      padding-bottom:110px;
+      max-width:760px;
+      margin:0 auto;
+    }
+
+    .hero{
+      background:linear-gradient(135deg,#1e90ff,#60a5fa);
+      color:#fff;
+      border-radius:26px;
+      padding:22px 18px;
+      box-shadow:0 14px 34px rgba(30,144,255,.24);
+      margin-bottom:18px;
+    }
+
+    .hero-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .hero h1{
+      font-size:25px;
+      margin-bottom:6px;
+    }
+
+    .hero p{
+      font-size:13px;
+      line-height:1.6;
+      opacity:.96;
+    }
+
+    .hero-badge{
+      min-width:58px;
+      height:58px;
+      border-radius:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(255,255,255,.18);
+      font-size:28px;
+      box-shadow:inset 0 1px 1px rgba(255,255,255,.15);
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+      margin-bottom:18px;
+    }
+
+    .stat-card{
+      background:var(--card);
+      border-radius:20px;
+      padding:16px;
+      box-shadow:var(--shadow);
+      border:1px solid #edf2f7;
+    }
+
+    .stat-label{
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:8px;
+    }
+
+    .stat-value{
+      font-size:24px;
+      font-weight:800;
+      color:#111827;
+      margin-bottom:4px;
+    }
+
+    .stat-sub{
+      font-size:12px;
+      color:#94a3b8;
+    }
+
+    .section-title{
+      margin:18px 0 12px;
+      font-size:17px;
+      font-weight:700;
+      color:#334155;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:14px;
+    }
+
+    .menu-card{
+      background:var(--card);
+      border-radius:22px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      border:1px solid #edf2f7;
+      text-decoration:none;
+      color:inherit;
+      transition:.2s;
+      display:block;
+      min-height:168px;
+    }
+
+    .menu-card:hover{
+      transform:translateY(-2px);
+    }
+
+    .menu-icon{
+      width:56px;
+      height:56px;
+      border-radius:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:25px;
+      margin-bottom:14px;
+      color:#fff;
+    }
+
+    .bg-primary{ background:var(--primary); }
+    .bg-success{ background:var(--success); }
+    .bg-warning{ background:var(--warning); }
+    .bg-danger{ background:var(--danger); }
+    .bg-purple{ background:var(--purple); }
+    .bg-cyan{ background:var(--cyan); }
+
+    .menu-title{
+      font-size:17px;
+      font-weight:700;
+      margin-bottom:7px;
+      color:#111827;
+      line-height:1.4;
+    }
+
+    .menu-desc{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    .mini-box{
+      margin-top:16px;
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:16px;
+      box-shadow:var(--shadow);
+    }
+
+    .mini-box h3{
+      font-size:16px;
+      margin-bottom:8px;
+      color:#0f172a;
+    }
+
+    .mini-box p{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.7;
+    }
+
+    .bottom-nav{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:10px;
+      width:min(760px, calc(100% - 20px));
+      background:#fff;
+      border:1px solid #e5e7eb;
+      box-shadow:0 10px 28px rgba(15,23,42,.12);
+      border-radius:20px;
+      padding:8px;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:8px;
+      z-index:999;
+    }
+
+    .nav-item{
+      text-decoration:none;
+      color:#64748b;
+      font-weight:700;
+      font-size:13px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:4px;
+      padding:10px 6px;
+      border-radius:14px;
+      transition:.2s;
+    }
+
+    .nav-item:hover{
+      background:#f1f5f9;
+    }
+
+    .nav-item.active{
+      background:#e0f2fe;
+      color:#0284c7;
+    }
+
+    .nav-item span{
+      font-size:11px;
+    }
+
+    @media (max-width:560px){
+      .grid{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .menu-card{
+        min-height:160px;
+        padding:16px;
+      }
+
+      .menu-title{
+        font-size:15px;
+      }
+
+      .menu-desc{
+        font-size:12px;
+      }
+
+      .stat-value{
+        font-size:22px;
+      }
+    }
+
+    @media (max-width:420px){
+      .grid,
+      .stats{
+        grid-template-columns:1fr;
+      }
+
+      .menu-card{
+        min-height:auto;
+      }
+
+      .hero-top{
+        flex-direction:row;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="loginScreen">
-  <h3>Masukkan Password</h3>
-  <input type="password" id="passwordInput" placeholder="Password">
-  <button onclick="checkLogin()">Masuk</button>
-  <div id="loginError"></div>
-</div>
-
-<!-- HEADER -->
-<header class="top-header">
-  <h2>School Bus</h2>
-  <small>Dashboard</small>
-</header>
-
-<!-- STAT CARD -->
-<div class="stat-grid">
-  <div class="stat-card">
-    <span>Total Driver</span>
-    <b id="totalDriver">0</b>
+  <div class="hero">
+    <div class="hero-top">
+      <div>
+        <h1>Dashboard School Bus</h1>
+        <p>
+          Kelola perjalanan siswa, driver, laporan, backup data, dan konfigurasi harga
+          dalam satu halaman yang lebih rapi dan nyaman dipakai di HP.
+        </p>
+      </div>
+      <div class="hero-badge">🚌</div>
+    </div>
   </div>
-  <div class="stat-card">
-    <span>Total Siswa</span>
-    <b id="totalSiswa">0</b>
-  </div>
-  <div class="stat-card">
-    <span>Trayek</span>
-    <b id="totalTrayek">0</b>
-  </div>
-  <div class="stat-card">
-    <span>Hari Ini</span>
-    <b id="totalNew">0</b>
-  </div>
-</div>
 
-<!-- MENU -->
-<div class="menu-grid">
-  <div class="menu-btn" onclick="location.href='input.html'">📝<br>Input</div>
-  <div class="menu-btn" onclick="location.href='cari.html'">✏️<br>Edit</div>
-  <div class="menu-btn" onclick="location.href='lapor.html'">📄<br>Laporan</div>
-  <div class="menu-btn" onclick="location.href='driver.html'">🧑‍✈️<br>Driver</div>
-</div>
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-label">Menu Aktif</div>
+      <div class="stat-value">6</div>
+      <div class="stat-sub">Fitur utama tersedia</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Status Aplikasi</div>
+      <div class="stat-value">ON</div>
+      <div class="stat-sub">Siap digunakan</div>
+    </div>
+  </div>
 
-<div id="navbar"></div>
+  <div class="section-title">Menu Utama</div>
 
-<script src="js/storage.js"></script>
-<script src="js/login.js"></script>
-<script src="js/dashboard.js"></script>
-<script src="js/navbar.js"></script>
+  <div class="grid">
+    <a href="input.html" class="menu-card">
+      <div class="menu-icon bg-primary">📝</div>
+      <div class="menu-title">Input Perjalanan</div>
+      <div class="menu-desc">
+        Tambahkan data perjalanan baru berdasarkan driver, siswa, jarak, trayek, dan total biaya.
+      </div>
+    </a>
+
+    <a href="driver.html" class="menu-card">
+      <div class="menu-icon bg-purple">🧑‍✈️</div>
+      <div class="menu-title">Manajemen Driver</div>
+      <div class="menu-desc">
+        Tambah, lihat, ubah, dan hapus data driver untuk kebutuhan perjalanan.
+      </div>
+    </a>
+
+    <a href="cari.html" class="menu-card">
+      <div class="menu-icon bg-warning">✏️</div>
+      <div class="menu-title">Edit Perjalanan</div>
+      <div class="menu-desc">
+        Cari data perjalanan, ubah data, perbarui total, atau hapus data yang tersimpan.
+      </div>
+    </a>
+
+    <a href="backup.html" class="menu-card">
+      <div class="menu-icon bg-success">💾</div>
+      <div class="menu-title">Backup & Restore</div>
+      <div class="menu-desc">
+        Backup data, hapus isi Firebase, lalu restore kembali dari file JSON saat dibutuhkan.
+      </div>
+    </a>
+
+    <a href="lapor.html" class="menu-card">
+      <div class="menu-icon bg-cyan">📊</div>
+      <div class="menu-title">Laporan Perjalanan</div>
+      <div class="menu-desc">
+        Lihat rekap data perjalanan, filter laporan, lalu export atau kirim ke WhatsApp.
+      </div>
+    </a>
+
+    <a href="config.html" class="menu-card">
+      <div class="menu-icon bg-danger">⚙️</div>
+      <div class="menu-title">Konfigurasi Harga</div>
+      <div class="menu-desc">
+        Atur harga dasar dan kenaikan harga per kilometer agar hasil perhitungan lebih akurat.
+      </div>
+    </a>
+  </div>
+
+  <div class="mini-box">
+    <h3>Catatan</h3>
+    <p>
+      Pastikan file <b>index.html</b>, <b>dashboard.html</b>, <b>input.html</b>, <b>driver.html</b>,
+      <b>cari.html</b>, <b>backup.html</b>, <b>lapor.html</b>, dan <b>config.html</b>
+      berada dalam folder yang sama agar semua menu berjalan normal.
+    </p>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="index.html" class="nav-item" id="navHome">🏠<span>Home</span></a>
+    <a href="dashboard.html" class="nav-item active" id="navDash">📋<span>Dashboard</span></a>
+    <a href="input.html" class="nav-item" id="navInput">📝<span>Input</span></a>
+    <a href="lapor.html" class="nav-item" id="navLaporan">📊<span>Laporan</span></a>
+  </div>
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", async () => {
+      try {
+        await navigator.serviceWorker.register("./service-worker.js");
+        console.log("Service Worker berhasil didaftarkan");
+      } catch (error) {
+        console.error("Service Worker gagal:", error);
+      }
+    });
+  }
+</script>
 </body>
 </html>

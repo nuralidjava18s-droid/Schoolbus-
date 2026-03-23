@@ -3,101 +3,867 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Laporan Perjalanan</title>
-  <link rel="stylesheet" href="css/style.css">
- <link rel="stylesheet" href="css/navbar.css">
- <link rel="stylesheet" href="css/lapor.css">
+  <title>Laporan Perjalanan Firebase</title>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1e90ff">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="School Bus App">
+  <style>
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
+
+    :root{
+      --primary:#1e90ff;
+      --primary-dark:#187bdb;
+      --success:#16a34a;
+      --warning:#f59e0b;
+      --danger:#ef4444;
+      --bg:#f4f7fb;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --border:#dbe3ee;
+      --shadow:0 8px 24px rgba(15,23,42,.08);
+      --radius:18px;
+    }
+
+    body{
+      font-family:Arial,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      padding:16px;
+      padding-bottom:100px;
+      max-width:1000px;
+      margin:0 auto;
+    }
+
+    h2{
+      text-align:center;
+      color:var(--primary);
+      margin-bottom:16px;
+      font-size:24px;
+    }
+
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:16px;
+      margin-bottom:16px;
+      box-shadow:var(--shadow);
+      border:1px solid #edf2f7;
+    }
+
+    label{
+      display:block;
+      font-size:14px;
+      font-weight:600;
+      margin-bottom:6px;
+      margin-top:12px;
+      color:#374151;
+    }
+
+    input,
+    select{
+      width:100%;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:12px 14px;
+      font-size:14px;
+      outline:none;
+      background:#fff;
+    }
+
+    input:focus,
+    select:focus{
+      border-color:var(--primary);
+      box-shadow:0 0 0 4px rgba(30,144,255,.10);
+    }
+
+    .grid-2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .grid-4{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      margin-top:14px;
+    }
+
+    .btn{
+      width:100%;
+      border:none;
+      border-radius:12px;
+      padding:13px 14px;
+      font-size:14px;
+      font-weight:700;
+      cursor:pointer;
+      margin-top:14px;
+    }
+
+    .btn-primary{
+      background:var(--primary);
+      color:#fff;
+    }
+
+    .btn-primary:hover{
+      background:var(--primary-dark);
+    }
+
+    .btn-warning{
+      background:var(--warning);
+      color:#111827;
+    }
+
+    .btn-success{
+      background:var(--success);
+      color:#fff;
+    }
+
+    .btn-danger{
+      background:var(--danger);
+      color:#fff;
+    }
+
+    .summary{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .summary-box{
+      background:#f8fbff;
+      border:1px solid #dcecff;
+      border-radius:16px;
+      padding:16px;
+      text-align:center;
+    }
+
+    .summary-box h3{
+      font-size:14px;
+      color:var(--muted);
+      margin-bottom:8px;
+      font-weight:600;
+    }
+
+    .summary-box p{
+      font-size:14px;
+      font-weight:600;
+      color:var(--primary);
+    }
+
+    .table-wrap{
+      overflow:auto;
+      border:1px solid var(--border);
+      border-radius:14px;
+      margin-top:14px;
+      background:#fff;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:900px;
+    }
+
+    th, td{
+      padding:12px 10px;
+      border-bottom:1px solid #e5e7eb;
+      font-size:13px;
+      text-align:left;
+      vertical-align:top;
+    }
+
+    th{
+      background:#eff6ff;
+      color:#1d4ed8;
+      font-size:13px;
+      position:sticky;
+      top:0;
+      z-index:1;
+    }
+
+    tr:hover td{
+      background:#fafcff;
+    }
+
+    .text-right{
+      text-align:right;
+    }
+
+    .text-center{
+      text-align:center;
+    }
+
+    .empty{
+      text-align:center;
+      color:var(--muted);
+      padding:18px;
+      font-size:14px;
+    }
+
+    .mini-note{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:8px;
+      line-height:1.5;
+    }
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:24px;
+      transform:translateX(-50%);
+      background:#111827;
+      color:#fff;
+      padding:12px 16px;
+      border-radius:10px;
+      opacity:0;
+      pointer-events:none;
+      transition:.25s;
+      z-index:9999;
+      max-width:90%;
+      text-align:center;
+      box-shadow:0 10px 30px rgba(0,0,0,.18);
+    }
+
+    .toast.show{
+      opacity:1;
+    }
+
+    .navbar{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:10px;
+      width:min(1000px, calc(100% - 20px));
+      background:#fff;
+      border:1px solid #e5e7eb;
+      box-shadow:0 8px 25px rgba(15,23,42,.10);
+      border-radius:18px;
+      padding:10px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      z-index:999;
+    }
+       .navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+}
+
+.nav-title {
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  flex-grow: 1;
+}
+    .nav-btn{
+      border:none;
+      border-radius:14px;
+      padding:12px 10px;
+      font-size:14px;
+      font-weight:700;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+
+    .nav-back{
+      background:#f1f5f9;
+      color:#334155;
+    }
+
+    .nav-home{
+      background:var(--primary);
+      color:#fff;
+    }
+
+    .nav-btn:active{
+      transform:scale(.98);
+    }
+
+    @media (max-width:768px){
+      .grid-2,
+      .grid-4,
+      .summary{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
 </head>
 <body>
-<div id="navbar"></div>
 
-<script>
-fetch("navbar.html")
-  .then(res => {
-    if(!res.ok) throw new Error("Navbar tidak ditemukan");
-    return res.text();
-  })
-  .then(html => {
-    document.getElementById("navbar").innerHTML = html;
-  })
-  .catch(err => {
-    console.error(err);
+  <h2>Laporan Perjalanan</h2>
+
+  <div class="card">
+    <div class="grid-2">
+      <div>
+        <label>Bulan</label>
+        <select id="filterBulan">
+          <option value="">-- Pilih Bulan --</option>
+          <option value="01">Januari</option>
+          <option value="02">Februari</option>
+          <option value="03">Maret</option>
+          <option value="04">April</option>
+          <option value="05">Mei</option>
+          <option value="06">Juni</option>
+          <option value="07">Juli</option>
+          <option value="08">Agustus</option>
+          <option value="09">September</option>
+          <option value="10">Oktober</option>
+          <option value="11">November</option>
+          <option value="12">Desember</option>
+        </select>
+      </div>
+      <div>
+        <label>Tahun</label>
+        <select id="filterTahun">
+          <option value="">-- Pilih Tahun --</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <label>Filter Driver</label>
+        <select id="filterDriver">
+          <option value="">-- Semua Driver --</option>
+        </select>
+      </div>
+      <div>
+        <label>Cari Nama Siswa</label>
+        <input type="text" id="searchSiswa" placeholder="Masukkan nama siswa">
+      </div>
+    </div>
+
+    <div class="grid-4">
+      <button class="btn btn-primary" onclick="applyFilter()">🔍 Tampilkan</button>
+      <button class="btn btn-warning" onclick="resetFilter()">♻️ Reset</button>
+      <button class="btn btn-danger" onclick="exportPDF()">📄 Export PDF</button>
+      <button class="btn btn-success" onclick="exportWA()">📤 Export WA</button>
+    </div>
+
+    <div class="mini-note">Data diambil dari Firestore collection <b>perjalanan</b>.</div>
+
+    <div class="summary">
+      <div class="summary-box">
+        <h3>Total Data</h3>
+        <p id="totalData">0</p>
+      </div>
+      <div class="summary-box">
+        <h3>Total Pemasukan</h3>
+        <p id="totalPemasukan">Rp 0</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Tanggal</th>
+            <th>Driver</th>
+            <th>Nama Siswa</th>
+            <th>Kelas</th>
+            <th>Alamat</th>
+            <th>Jarak</th>
+            <th>Trayek</th>
+            <th class="text-right">Diskon</th>
+            <th class="text-right">Total</th>
+          </tr>
+        </thead>
+        <tbody id="laporanBody">
+          <tr>
+            <td colspan="10" class="empty">Memuat data...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <div class="navbar">
+  <button class="nav-btn" onclick="goBack()">⬅️ <span>Back</span></button>
+  <div class="nav-title">School Bus App</div>
+  <a href="index.html" class="nav-btn">🏠 <span>Home</span></a>
+</div>
+  
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getFirestore,
+    collection,
+    getDocs,
+    query,
+    orderBy
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBxbArCZ6iIWQ8wS7QIonZOeN4t_r9o2WU",
+    authDomain: "schoolbus-6a7fd.firebaseapp.com",
+    databaseURL: "https://schoolbus-6a7fd-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "schoolbus-6a7fd",
+    storageBucket: "schoolbus-6a7fd.firebasestorage.app",
+    messagingSenderId: "486602913199",
+    appId: "1:486602913199:web:9547f39f5f57f9c87b2b5a"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  let allPerjalanan = [];
+  let filteredData = [];
+  let allDrivers = [];
+
+  const laporanBody = document.getElementById("laporanBody");
+  const filterBulan = document.getElementById("filterBulan");
+  const filterTahun = document.getElementById("filterTahun");
+  const filterDriver = document.getElementById("filterDriver");
+  const searchSiswa = document.getElementById("searchSiswa");
+  const totalData = document.getElementById("totalData");
+  const totalPemasukan = document.getElementById("totalPemasukan");
+
+  function showToast(message){
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 2500);
+  }
+
+  function rupiah(n){
+    return "Rp " + Number(n || 0).toLocaleString("id-ID");
+  }
+
+  function escapeHtml(text){
+    return String(text ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function formatTanggalIndonesia(tanggal, format = "short"){
+    if(!tanggal) return "-";
+    const d = new Date(tanggal);
+    if(isNaN(d)) return tanggal;
+
+    if(format === "short"){
+      return d.toLocaleDateString("id-ID", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+      });
+    }
+
+    if(format === "long"){
+      const bulan = d.toLocaleString("id-ID", { month: "long" });
+      const tahun = d.getFullYear();
+      return `${bulan} ${tahun}`;
+    }
+
+    return tanggal;
+  }
+
+  function getNamaBulan(value){
+    const map = {
+      "01":"Januari",
+      "02":"Februari",
+      "03":"Maret",
+      "04":"April",
+      "05":"Mei",
+      "06":"Juni",
+      "07":"Juli",
+      "08":"Agustus",
+      "09":"September",
+      "10":"Oktober",
+      "11":"November",
+      "12":"Desember"
+    };
+    return map[value] || "";
+  }
+
+  function getPeriodeText(){
+    const bulan = filterBulan.value;
+    const tahun = filterTahun.value;
+
+    if(bulan && tahun) return `${getNamaBulan(bulan)} ${tahun}`;
+    if(bulan && !tahun) return `${getNamaBulan(bulan)} (Semua Tahun)`;
+    if(!bulan && tahun) return `Semua Bulan ${tahun}`;
+    return "Semua Periode";
+  }
+
+  function applyFilter(){
+    const bulan = filterBulan.value;
+    const tahun = filterTahun.value;
+    const driver = filterDriver.value;
+    const keyword = searchSiswa.value.trim().toLowerCase();
+
+    filteredData = allPerjalanan.filter(item => {
+      const tanggal = item.tanggal || "";
+      const namaDriver = item.namaDriver || "";
+      const namaSiswa = (item.namaSiswa || "").toLowerCase();
+
+      const cocokBulan = !bulan || tanggal.substring(5, 7) === bulan;
+      const cocokTahun = !tahun || tanggal.substring(0, 4) === tahun;
+      const cocokDriver = !driver || namaDriver === driver;
+      const cocokSiswa = !keyword || namaSiswa.includes(keyword);
+
+      return cocokBulan && cocokTahun && cocokDriver && cocokSiswa;
+    });
+
+    renderTable();
+    renderSummary();
+  }
+
+  async function loadPerjalanan(){
+    laporanBody.innerHTML = `<tr><td colspan="10" class="empty">Memuat data...</td></tr>`;
+
+    try{
+      const q = query(collection(db, "perjalanan"), orderBy("tanggal", "desc"));
+      const snapshot = await getDocs(q);
+
+      allPerjalanan = [];
+      allDrivers = [];
+
+      snapshot.forEach((docSnap) => {
+        const data = {
+          docId: docSnap.id,
+          ...docSnap.data()
+        };
+
+        allPerjalanan.push(data);
+
+        if(data.namaDriver && !allDrivers.includes(data.namaDriver)){
+          allDrivers.push(data.namaDriver);
+        }
+      });
+
+      allDrivers.sort((a, b) => a.localeCompare(b, "id"));
+      renderDriverFilter();
+      applyFilter();
+    }catch(error){
+      console.error(error);
+      laporanBody.innerHTML = `<tr><td colspan="10" class="empty">Gagal memuat data laporan</td></tr>`;
+      showToast("Gagal memuat laporan");
+    }
+  }
+
+  function renderDriverFilter(){
+    filterDriver.innerHTML = '<option value="">-- Semua Driver --</option>';
+
+    allDrivers.forEach(nama => {
+      const opt = document.createElement("option");
+      opt.value = nama;
+      opt.textContent = nama;
+      filterDriver.appendChild(opt);
+    });
+  }
+
+  function populateTahun(){
+    const tahunSekarang = new Date().getFullYear();
+    filterTahun.innerHTML = '<option value="">-- Pilih Tahun --</option>';
+
+    for(let tahun = tahunSekarang; tahun >= tahunSekarang - 5; tahun--){
+      const opt = document.createElement("option");
+      opt.value = String(tahun);
+      opt.textContent = tahun;
+      filterTahun.appendChild(opt);
+    }
+  }
+
+  function renderTable(){
+    laporanBody.innerHTML = "";
+
+    if(filteredData.length === 0){
+      laporanBody.innerHTML = `<tr><td colspan="10" class="empty">Tidak ada data yang sesuai filter</td></tr>`;
+      return;
+    }
+
+    filteredData.forEach((item, index) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td class="text-center">${index + 1}</td>
+        <td>${escapeHtml(formatTanggalIndonesia(item.tanggal || "-"))}</td>
+        <td>${escapeHtml(item.namaDriver || "-")}</td>
+        <td>${escapeHtml(item.namaSiswa || "-")}</td>
+        <td>${escapeHtml(item.kelas || "-")}</td>
+        <td>${escapeHtml(item.alamat || "-")}</td>
+        <td>${escapeHtml(item.jarak || 0)} Km</td>
+        <td>${escapeHtml((item.trayek || "-").toUpperCase())}</td>
+        <td class="text-right">${escapeHtml(String(item.diskon || 0))}%</td>
+        <td class="text-right">${escapeHtml(rupiah(item.total || 0))}</td>
+      `;
+      laporanBody.appendChild(tr);
+    });
+  }
+
+  function renderSummary(){
+  totalData.textContent = filteredData.length;
+  const total = filteredData.reduce((sum, item) => {
+    return sum + Number(item.total || 0);
+  }, 0);
+  const potongan = total * 0.10;
+  const dibayarkan = total - potongan;
+  totalPemasukan.innerHTML = `
+    <div>Total     : ${rupiah(total)}</div>
+    <div>Pot 10%   : ${rupiah(potongan)}</div>
+    <div>Dibayarkan: ${rupiah(dibayarkan)}</div>
+  `;
+}
+
+  function resetFilter(){
+    filterBulan.value = "";
+    filterTahun.value = "";
+    filterDriver.value = "";
+    searchSiswa.value = "";
+    applyFilter();
+    showToast("Filter direset");
+  }
+
+  function buildExportText(){
+    const driver = filterDriver.value || "Semua Driver";
+    const keyword = searchSiswa.value.trim() || "-";
+    const periode = getPeriodeText();
+
+    const total = filteredData.reduce((sum, item) => {
+      return sum + Number(item.total || 0);
+    }, 0);
+
+    let text = `*LAPORAN PERJALANAN SCHOOL BUS*%0A`;
+    text += `Periode: ${periode}%0A`;
+    text += `Driver: ${driver}%0A`;
+    text += `Cari Siswa: ${keyword}%0A`;
+    text += `Total Data: ${filteredData.length}%0A`;
+    text += `Total Pemasukan: ${rupiah(total)}%0A%0A`;
+
+    filteredData.forEach((item, index) => {
+      text += `${index + 1}. ${item.tanggal || "-"} | ${item.namaSiswa || "-"} | ${item.namaDriver || "-"} | ${item.trayek || "-"} | ${rupiah(item.total || 0)}%0A`;
+    });
+
+    return text;
+  }
+
+  function exportWA(){
+    if(filteredData.length === 0){
+      showToast("Tidak ada data untuk diexport");
+      return;
+    }
+
+    const text = buildExportText();
+    const waUrl = `https://wa.me/?text=${text}`;
+    window.open(waUrl, "_blank");
+  }
+
+  function getNamaFilePDF(){
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth()+1).padStart(2,"0");
+    const d = String(now.getDate()).padStart(2,"0");
+    const hh = String(now.getHours()).padStart(2,"0");
+    const mm = String(now.getMinutes()).padStart(2,"0");
+    return `laporan-perjalanan-${y}-${m}-${d}-${hh}-${mm}.pdf`;
+  }
+
+  function exportPDF(){
+  if(filteredData.length === 0){
+    showToast("Tidak ada data untuk diexport");
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF("l", "mm", "a4");
+
+  const driver = filterDriver.value || "";
+  const periode = getPeriodeText();
+
+  const total = filteredData.reduce((sum, item) => {
+    return sum + Number(item.total || 0);
+  }, 0);
+
+  const pot10 = total * 0.10;
+  const dibayarkan = total - pot10;
+
+  const now = new Date();
+  const tanggalCetak =
+    now.toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
+    }) +
+    " " +
+    now.toLocaleTimeString("id-ID", {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+
+  const judulLaporan = driver
+    ? `LAPORAN PERJALANAN DRIVER: ${driver.toUpperCase()}`
+    : "LAPORAN PERJALANAN SEMUA DRIVER";
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(16);
+  doc.text(judulLaporan, 14, 15);
+
+  doc.setDrawColor(30, 144, 255);
+  doc.setLineWidth(0.8);
+  doc.line(14, 18, 283, 18);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+
+  doc.text(`Periode`, 14, 28);
+  doc.text(`: ${periode}`, 38, 28);
+
+  doc.text(`Driver`, 14, 34);
+  doc.text(`: ${driver || "Semua Driver"}`, 38, 34);
+
+  doc.text(`Tanggal Cetak`, 14, 40);
+  doc.text(`: ${tanggalCetak}`, 38, 40);
+
+  doc.text(`Total Siswa`, 193, 28);
+  doc.text(`: ${filteredData.length}`, 220, 28);
+
+  doc.text(`Total`, 190, 34);
+  doc.text(`: ${rupiah(total)}`, 220, 34);
+
+  doc.text(`Pot 10%`, 190, 40);
+  doc.text(`: ${rupiah(pot10)}`, 220, 40);
+
+  doc.text(`Dibayarkan`, 190, 46);
+  doc.text(`: ${rupiah(dibayarkan)}`, 220, 46);
+
+  const body = filteredData.map((item, index) => [
+    index + 1,
+    item.namaSiswa || "-",
+    item.kelas || "-",
+    item.alamat || "-",
+    `${item.jarak || 0} Km`,
+    (item.trayek || "-").toUpperCase(),
+    `${item.diskon || 0}%`,
+    rupiah(item.total || 0)
+  ]);
+
+  doc.autoTable({
+    startY: 54,
+    head: [[
+      "No",
+      "Nama Siswa",
+      "Kelas",
+      "Alamat",
+      "Jarak",
+      "Trayek",
+      "Diskon",
+      "Total"
+    ]],
+    body,
+    styles: {
+      fontSize: 8,
+      cellPadding: 2.5,
+      valign: "middle",
+      lineColor: [220, 226, 234],
+      lineWidth: 0.1
+    },
+    headStyles: {
+      fillColor: [30, 144, 255],
+      textColor: 255,
+      fontStyle: "bold",
+      halign: "center"
+    },
+    bodyStyles: {
+      textColor: [33, 37, 41]
+    },
+    alternateRowStyles: {
+      fillColor: [248, 250, 252]
+    },
+    columnStyles: {
+      0: { halign: "center", cellWidth: 10 },
+      1: { cellWidth: 38 },
+      2: { halign: "center", cellWidth: 18 },
+      3: { cellWidth: 92 },
+      4: { halign: "center", cellWidth: 18 },
+      5: { halign: "center", cellWidth: 20 },
+      6: { halign: "right", cellWidth: 18 },
+      7: { halign: "right", cellWidth: 28 }
+    },
+    margin: { left: 10, right: 10 },
+    didDrawPage: function(data){
+      const pageCount = doc.internal.getNumberOfPages();
+
+      doc.setFontSize(9);
+      doc.setTextColor(120);
+      doc.text(
+        `Halaman ${data.pageNumber} dari ${pageCount}`,
+        245,
+        doc.internal.pageSize.getHeight() - 8
+      );
+    }
   });
+
+  doc.save(getNamaFilePDF());
+  showToast("PDF berhasil disimpan");
+}
+
+  function goBack(){
+    if(history.length > 1){
+      history.back();
+    }else{
+      location.href = "dashboard.html";
+    }
+  }
+
+  function goHome(){
+    location.href = "index.html";
+  }
+
+  window.applyFilter = applyFilter;
+  window.resetFilter = resetFilter;
+  window.exportWA = exportWA;
+  window.exportPDF = exportPDF;
+  window.goBack = goBack;
+  window.goHome = goHome;
+
+  searchSiswa.addEventListener("input", applyFilter);
+  filterDriver.addEventListener("change", applyFilter);
+  filterBulan.addEventListener("change", applyFilter);
+  filterTahun.addEventListener("change", applyFilter);
+
+  document.addEventListener("DOMContentLoaded", () => {
+    populateTahun();
+    loadPerjalanan();
+  });
+  
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", async () => {
+      try {
+        await navigator.serviceWorker.register("./service-worker.js");
+        console.log("Service Worker berhasil didaftarkan");
+      } catch (error) {
+        console.error("Service Worker gagal:", error);
+      }
+    });
+  }
+  
 </script>
-<h2>Laporan Perjalanan</h2>
 
-<select id="pilihDriver"></select>
-<input type="month" id="bulanSelect">
-
-<br><br>
-
-<button onclick="tampilLaporan()">Laporan Driver</button>
-<button onclick="tampilSemuaDriver()">Semua Driver</button>
-
-<!-- ================= TABEL DRIVER ================= -->
-<!-- INFO LAPORAN DRIVER -->
-<div id="infoLaporan" class="info-laporan" style="display:none">
-  <div><b>Nama Driver :</b> <span id="infoDriver"></span></div>
-  <div><b>Bulan :</b> <span id="infoBulan"></span></div>
-</div>
-<table id="tabelLapor">
-  <thead>
-    <tr>
-      <th>No</th>
-      <th>Nama Siswa</th>
-      <th>Kelas</th>
-      <th>Alamat</th>
-      <th>Trayek</th>
-      <th>Jarak</th>
-      <th>Total (Rp)</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
-<!-- RINGKASAN DRIVER -->
-<div id="ringkasanDriver" class="ringkasan-driver" style="display:none">
-  <div>Total : <b id="totalKotor">Rp 0</b></div>
-  <div>Pot 10% : <b id="potongan">Rp 0</b></div>
-  <hr>
-  <div>Dibayarkan : <b id="totalBersih">Rp 0</b></div>
-</div>
-<!-- TOTAL PER DRIVER -->
-<div id="totalPerDriver" style="margin-top:10px;font-weight:bold;display:none"></div>
-
-<br>
-<div class="table-wrap">
-  <table>
-    ...
-  </table>
-</div>
-<!-- ================= TABEL SEMUA DRIVER ================= -->
-<table id="tabelSemua" style="display:none">
-  <thead>
-    <tr>
-      <th>No</th>
-      <th>Driver</th>
-      <th>Nama Siswa</th>
-      <th>Kelas</th>
-      <th>Alamat</th>
-      <th>Trayek</th>
-      <th>Jarak</th>
-      <th>Total (Rp)</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
-
-<!-- TOTAL SEMUA DRIVER -->
-<div class="total-box">
-  <div>Total Driver: <span id="totalDriver">0</span></div>
-  <div>Total Semua: <span id="totalSemua">0</span></div>
-</div>
-<div id="totalSemua" style="margin-top:10px;font-weight:bold;display:none"></div>
-  <div id="navbar"></div> 
-  
-   <script src="js/storage.js"></script>
-   <script src="js/lapor.js"></script>
-  
 </body>
 </html>
