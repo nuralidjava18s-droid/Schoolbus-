@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>School Bus App</title>
 
   <link rel="manifest" href="./manifest.json">
@@ -32,7 +31,7 @@
     }
 
     body{
-      font-family:Arial,sans-serif;
+      font-family:Arial, sans-serif;
       background:linear-gradient(180deg,#eaf4ff 0%, #f4f7fb 100%);
       min-height:100vh;
       display:flex;
@@ -61,14 +60,12 @@
       height:92px;
       border-radius:24px;
       margin:0 auto 18px;
-      background:linear-gradient(135deg,#1e90ff,#60a5fa);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:#fff;
-      font-size:34px;
-      font-weight:700;
-      box-shadow:0 12px 25px rgba(30,144,255,.25);
+      display:block;
+      object-fit:cover;
+      background:#fff;
+      box-shadow:0 12px 25px rgba(30,144,255,.18);
+      border:1px solid #dbeafe;
+      padding:8px;
     }
 
     h1{
@@ -127,13 +124,29 @@
       color:#94a3b8;
       font-size:12px;
     }
+
+    @media (max-width:480px){
+      .card{
+        padding:24px 18px;
+      }
+
+      h1{
+        font-size:24px;
+      }
+
+      p{
+        font-size:13px;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="card">
-      <div class="logo">SB</div>
+      <img src="./img/icon-512.png" alt="Logo School Bus App" class="logo">
+
       <h1>School Bus App</h1>
+
       <p>
         Aplikasi pengelolaan perjalanan school bus berbasis Firebase.
         Input data, edit perjalanan, lihat laporan, dan cetak PDF dalam satu sistem.
